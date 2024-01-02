@@ -1,15 +1,18 @@
 // server.js
+require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require("cors")
 const User = require('./model/User');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
+app.use(cors())
 
-mongoose.connect('mongodb://localhost:27017/mindful-gurukul', {
+mongoose.connect('mongodb+srv://rasel:rasel@cluster0.q37bxqk.mongodb.net/mindful-gurukul', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -23,9 +26,10 @@ db.once('open', () => {
 // Register
 app.post('/register', async (req, res) => {
     try {
+
         const newUser = new User(req.body);
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        res.status(201).json({ message: 'User Created Successfully', statusCode: 201 });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
