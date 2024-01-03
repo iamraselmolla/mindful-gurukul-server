@@ -50,7 +50,7 @@ app.post('/login', async (req, res) => {
         if (!findUser) {
             return res.status(400).json({ message: 'User not found. Please register first' })
         }
-        res.status(200).json({ message: 'Login Successfull', data: { id: findUser?._id, login: true } })
+        res.status(200).json({ message: 'Login Successfull', data: { id: findUser?._id, login: true, name: findUser?.name } })
     }
     catch (err) {
         console.log(err)
