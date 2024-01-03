@@ -28,8 +28,14 @@ app.post('/register', async (req, res) => {
     try {
 
         const newUser = new User(req.body);
+        const findUser = await User.findOne({ email: req.body.email })
+        if (findUser) {
+            return res.status(409).json({ message: 'User already registered', statusCode: 409 });
+        }
+
         const savedUser = await newUser.save();
         res.status(201).json({ message: 'User Created Successfully', statusCode: 201 });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
