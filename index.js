@@ -42,6 +42,20 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// Login
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const findUser = await User.findOne({ email })
+        if (!findUser) {
+            return res.status(400).json({ message: 'User not found. Please register first' })
+        }
+        res.status(200).json({ message: 'Login Successfull', data: { id: findUser?._id, login: true } })
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
