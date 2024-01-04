@@ -63,11 +63,25 @@ app.post('/add-user', async (req, res) => {
     try {
         const result = new AddedUser(req.body)
         const response = await result.save()
-        res.status(201).json({ message: 'User added' })
+        if (response) {
+            return res.status(201).json({ message: 'User added' })
+        }
 
     }
     catch (err) {
         return res.status(400).json({ message: err.message })
+    }
+})
+
+// Get user
+app.get('/users', async (req, res) => {
+    const { id } = req.query;
+    if (id) {
+        const findAllUserByAuthorId = await AddedUser.find({ author: id })
+        res.status(200).json({ data: findAllUserByAuthorId })
+    } else {
+        const findAll = await AddedUser.find();
+        res.status(200).json({ data: findAll })
     }
 })
 app.listen(PORT, () => {
