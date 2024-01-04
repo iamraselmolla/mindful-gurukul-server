@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require("cors")
 const User = require('./model/User');
+const AddedUser = require('./model/Adduser');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,11 +28,11 @@ db.once('open', () => {
 app.post('/register', async (req, res) => {
     try {
 
-        const newUser = new User(req.body);
         const findUser = await User.findOne({ email: req.body.email })
         if (findUser) {
             return res.status(409).json({ message: 'User already registered', statusCode: 409 });
         }
+        const newUser = new User(req.body);
 
         const savedUser = await newUser.save();
         res.status(201).json({ message: 'User Created Successfully', statusCode: 201 });
@@ -54,6 +55,19 @@ app.post('/login', async (req, res) => {
     }
     catch (err) {
         console.log(err)
+    }
+})
+
+// Add User
+app.post('/add-user', async (req, res) => {
+    try {
+        const result = new AddedUser(req.body)
+        const response = await result.save()
+        res.status(201).json({ message: 'User added' })
+
+    }
+    catch (err) {
+        return res.status(400).json({ message: err.message })
     }
 })
 app.listen(PORT, () => {
