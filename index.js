@@ -68,8 +68,9 @@ app.post('/add-user', async (req, res) => {
         }
 
     }
+
     catch (err) {
-        return res.status(400).json({ message: err.message })
+        return res.status(400).json({ message: err.message });
     }
 })
 
@@ -83,7 +84,33 @@ app.get('/users', async (req, res) => {
         const findAll = await AddedUser.find();
         res.status(200).json({ data: findAll })
     }
-})
+});
+
+
+// Delete User
+
+
+app.delete('/delete-user', async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        if (!id) {
+            return res.status(400).json({ error: 'ID is required for deletion.' });
+        }
+
+        const result = await AddedUser.deleteOne({ _id: id });
+
+        if (result.deletedCount === 1) {
+            return res.status(200).json({ message: 'User deleted successfully' });
+        } else {
+            return res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
