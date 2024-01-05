@@ -48,8 +48,12 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const findUser = await User.findOne({ email })
+
         if (!findUser) {
             return res.status(400).json({ message: 'User not found. Please register first' })
+        }
+        if (findUser.password !== password) {
+            return res.status(400).json({ message: 'Wrong Password' })
         }
         res.status(200).json({ message: 'Login Successfull', data: { id: findUser?._id, login: true, name: findUser?.name } })
     }
@@ -124,6 +128,11 @@ app.put('/update-user', async (req, res) => {
     }
     return res.status(500).json({ message: 'Internal Error' })
 
+})
+
+
+app.get('/', (req, res) => {
+    res.send('Hello World!')
 })
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
