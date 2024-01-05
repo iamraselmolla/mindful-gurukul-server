@@ -111,6 +111,20 @@ app.delete('/delete-user', async (req, res) => {
     }
 });
 
+// Update User Data
+app.put('/update-user', async (req, res) => {
+    const { _id, name, email, phone } = req.body;
+    const result = await AddedUser.findByIdAndUpdate(_id, {
+        name: name,
+        email: email,
+        phone: phone
+    })
+    if (result) {
+        return res.status(201).json({ message: 'User Updated' })
+    }
+    return res.status(500).json({ message: 'Internal Error' })
+
+})
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
